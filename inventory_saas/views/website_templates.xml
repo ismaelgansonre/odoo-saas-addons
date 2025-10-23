@@ -1,0 +1,14 @@
+<odoo>
+  <template id="custom_homepage" name="Custom Homepage" inherit_id="website.homepage">
+    <xpath expr="//div[@id='wrap']" position="replace">
+      <section id="custom_onboarding" class="oe_structure">
+        <div class="container text-center mt-5">
+          <h1>Bienvenue sur Inventory SaaS</h1>
+          <p>Gérez vos stocks, vos factures et vos clients facilement.</p>
+          <a href="/web/login" class="btn btn-primary">Se connecter</a>
+          <a href="/saas/signup" class="btn btn-outline-secondary ms-2">Créer un compte</a>
+        </div>
+      </section>
+    </xpath>
+  </template>
+</odoo>

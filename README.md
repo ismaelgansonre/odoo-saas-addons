@@ -4,9 +4,7 @@
 Si tu modifies le code d’un module, relance :
 
 
-`
-docker exec -it odoo_saas_web bash
-odoo -d template_inventory_db -u inventory_saas`
+`docker exec -it odoo_saas_web /usr/bin/odoo -u saas_onboarding -d maboite.mondev.com --stop-after-init`
 
 
 💡 Cela met à jour ton module sans le désinstaller.

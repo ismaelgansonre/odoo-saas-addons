@@ -1,0 +1,209 @@
+<odoo>
+    <!-- Template de la page d'atterrissage (Landing Page) - Gère les 3 objectifs -->
+    <template id="onboarding_landing_page" name="Page Principale Onboarding Inventaire">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+                <div class="container py-5 text-center" style="max-width: 900px;">
+                    <h1 class="display-4 text-primary mb-2"><i class="fa fa-cubes me-3"></i>Gestion d'Inventaire SaaS</h1>
+                    <p class="lead mb-5">Choisissez votre point d'entrée pour accéder à votre système d'inventaire.</p>
+
+                    <div class="row justify-content-center">
+                        <!-- Objectif 1: Nouveau Client (Créer) -->
+                        <div class="col-md-4 mb-4">
+                            <div class="card shadow-lg h-100 border-success">
+                                <div class="card-body">
+                                    <h5 class="card-title text-success"><i class="fa fa-plus-circle me-2"></i>Nouveau Système</h5>
+                                    <p class="card-text">Créez votre propre base de données d'inventaire.</p>
+                                    <button type="button" class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#modalCreateNew">
+                                        Démarrer l'Inventaire
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Objectif 2: Client Existant (Connexion) -->
+                        <div class="col-md-4 mb-4">
+                            <div class="card shadow-lg h-100 border-primary">
+                                <div class="card-body">
+                                    <h5 class="card-title text-primary"><i class="fa fa-sign-in me-2"></i>Connexion Existant</h5>
+                                    <p class="card-text">Accédez directement à votre espace de travail habituel.</p>
+                                    <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#modalLoginExisting">
+                                        Se Connecter
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Objectif 3: Client Invité (Rejoindre) -->
+                        <div class="col-md-4 mb-4">
+                            <div class="card shadow-lg h-100 border-warning">
+                                <div class="card-body">
+                                    <h5 class="card-title text-warning"><i class="fa fa-users me-2"></i>Rejoindre une Équipe</h5>
+                                    <p class="card-text">Utilisez un code d'invitation pour joindre l'inventaire d'une organisation.</p>
+                                    <button type="button" class="btn btn-warning mt-3" data-bs-toggle="modal" data-bs-target="#modalJoinTeam">
+                                        Code d'Accès
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    
+    <!-- Modals (Fenêtres Flottantes) pour les 3 flux -->
+    
+    <!-- Modal 1: Créer Nouveau -->
+    <template id="modal_create_new" name="Modal Créer Nouveau">
+        <div class="modal fade" id="modalCreateNew" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <form action="/saas/onboarding/process" method="post">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <input type="hidden" name="action_type" value="create_new"/>
+                        
+                        <div class="modal-header">
+                            <h5 class="modal-title">Créer votre Système d'Inventaire</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p class="text-muted">Ceci créera votre espace client isolé (`sousdomaine.mondev.com`).</p>
+                            <div class="mb-3">
+                                <label class="form-label">Nom de la Société</label>
+                                <input type="text" name="company_name" class="form-control" required="required" placeholder="MaBoite Inventaire"/>
+                                <small class="form-text text-muted">Utilisé pour votre sous-domaine.</small>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Votre Email (Admin)</label>
+                                <input type="email" name="email" class="form-control" required="required" placeholder="votre@email.com"/>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Mot de Passe</label>
+                                <input type="password" name="password" class="form-control" required="required"/>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <button type="submit" class="btn btn-success">Provisionner</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </template>
+    
+    <!-- Modal 2: Connexion Existant -->
+    <template id="modal_login_existing" name="Modal Connexion Existant">
+        <div class="modal fade" id="modalLoginExisting" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <form action="/saas/onboarding/process" method="post">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <input type="hidden" name="action_type" value="login_existing"/>
+                        
+                        <div class="modal-header">
+                            <h5 class="modal-title">Connexion à votre Espace Existant</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p class="alert alert-info">
+                                Veuillez vous connecter directement en utilisant l'URL de votre sous-domaine, par exemple: <br/>
+                                <strong>http://maboite.mondev.com:8069/web/login</strong>
+                            </p>
+                            <!-- NOTE: Ici, on pourrait ajouter un champ pour l'URL si l'utilisateur ne la connaît pas -->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                            <a href="/web/login" class="btn btn-primary">Aller à la page de Login</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Modal 3: Rejoindre Équipe (Code d'invitation) -->
+    <template id="modal_join_team" name="Modal Rejoindre Équipe">
+        <div class="modal fade" id="modalJoinTeam" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <form action="/saas/onboarding/process" method="post">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <input type="hidden" name="action_type" value="join_team"/>
+                        
+                        <div class="modal-header">
+                            <h5 class="modal-title">Rejoindre une Organisation par Code</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Code d'Invitation / Code d'Équipe</label>
+                                <input type="text" name="invitation_code" class="form-control" required="required" placeholder="Ex: Equipetest"/>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Votre Email</label>
+                                <input type="email" name="email" class="form-control" required="required" placeholder="votre@email.com"/>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Mot de Passe</label>
+                                <input type="password" name="password" class="form-control" required="required"/>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <button type="submit" class="btn btn-warning">Rejoindre</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </template>
+    
+    <!-- Ajout des Modals au Layout de la page Web -->
+    <template id="onboarding_modals_add" inherit_id="website.layout" name="Ajouter Modals Onboarding">
+        <xpath expr="//div[@id='wrapwrap']" position="before">
+            <t t-call="saas_onboarding.modal_create_new"/>
+            <t t-call="saas_onboarding.modal_login_existing"/>
+            <t t-call="saas_onboarding.modal_join_team"/>
+        </xpath>
+    </template>
+
+    <!-- Page de Succès et Redirection -->
+    <template id="onboarding_success_redirect" name="Succès et Redirection">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+                <div class="container py-5 text-center">
+                    <h1 class="text-success mb-4"><i class="fa fa-check-circle me-2"></i>Opération réussie !</h1>
+                    <p class="lead">
+                        <t t-esc="message"/>
+                    </p>
+                    <a t-attf-href="#{url}" class="btn btn-primary btn-lg mt-3">Aller à mon Espace</a>
+                    
+                    <script type="text/javascript">
+                        // Redirection automatique après 3 secondes
+                        setTimeout(function() {
+                            window.location.href = "<t t-esc="url"/>";
+                        }, 3000);
+                    </script>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Page d'Erreur -->
+    <template id="onboarding_error" name="Erreur Onboarding">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+                <div class="container py-5 text-center">
+                    <h1 class="text-danger mb-4"><i class="fa fa-exclamation-triangle me-2"></i>Erreur</h1>
+                    <p class="lead">
+                        Une erreur est survenue lors de l'opération. Veuillez réessayer.
+                    </p>
+                    <p class="text-muted small">Détail : <t t-esc="error"/></p>
+                    <a href="/" class="btn btn-secondary mt-3">Retour à l'accueil</a>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>
